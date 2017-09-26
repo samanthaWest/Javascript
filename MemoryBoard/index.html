@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title> Memory Game / Samantha West 128111168 </title>
+	<h1> MEMORY GAME <br>
+	- - - - - - - - - - - - - - </h1>
+	<h2> Listen! Match the letters to win. </h2>
+	<p> <button onclick="newBoard()"> Refresh Board </button> </p>
+	<style type="text/css">
+div#memory_board{
+background: #000000;
+border:#000000 1px solid;
+width: 513px;
+height: 610px;
+padding: 15px;
+margin:0px auto;
+position:fixed;
+left:50%;
+top: 15%;
+}
+
+div#memory_board > div{
+background: url(tri.jpg) no-repeat;
+border:#000 1px solid;
+width:65px;
+height:91px;
+float:left;
+margin:10px;
+padding:20px;
+font-size:64px;
+text-align:center;
+}
+
+body {
+	background: url(bg.jpg) no-repeat;
+	}
+	
+h1 {
+font-family: Helvetica;
+}	
+	</style>
+	
+<script>
+
+var alpha_array = [ 'a', 'b', 'c' ,'e', 'f', 'g', 'h', 'i' ,'a', 
+					'b', 'c' ,'e', 'f', 'g', 'h', 'i' , ];		
+var values = [];
+var tile_ids = [];
+var flipped = 0;
+
+Array.prototype.memory_tile_shuffle = function(){
+	var i = this.length, j, temp;
+	while(--i > 0){
+	j = Math.floor(Math.random() * (i+1));
+	temp = this[j];
+	this[j] = this[i];
+	this[i] = temp;
+	}
+}
+	
+function newBoard(){
+	flipped = 0;
+	var output = '';
+	alpha_array.memory_tile_shuffle();
+	for(var i = 0; i < alpha_array.length; i++){
+	output += '<div id="tile_'+i+'" onclick="memoryFlipTile(this,\''+alpha_array[i]+'\')"></div>';
+	}
+	document.getElementById('memory_board').innerHTML = output;
+	}
+	
+function memoryFlipTile(tile,val){
+if(tile.innerHTML == "" && values.length < 2){
+	tile.style.background = 'url(tri2.jpg) no-repeat';
+	tile.innerHTML = val;
+	if(values.length == 0){
+	values.push(val);
+	tile_ids.push(tile.id);
+	} else if (values.length == 1){
+	values.push(val);
+	tile_ids.push(tile.id);
+	if(values[0] == values[1]){
+	flipped += 2;
+	values = [];
+	tile_ids = [];
+	if(flipped == alpha_array.length){
+	alert("Boardd cleared..... generating new");
+	document.getElementById('memory_board').innerHTML = "";
+	newBoard();
+	}
+}	else {
+	function flip2back(){
+	var tile1 = document.getElementById(tile_ids[0]);
+	var tile2 = document.getElementById(tile_ids[1]);
+	tile1.style.background = 'url(tri.jpg) no-repeat';
+	tile1.innerHTML = "";
+	tile2.style.background = ' url(tri.jpg) no-repeat';
+	tile2.innerHTML = "";
+	values = [];
+	tile_ids = [];
+	}
+	setTimeout(flip2back, 200);
+			}
+		}
+	}
+}
+</script>
+<head>
+
+<body>
+<div id="memory_board"></div>
+<script>newBoard();</script>
+</body>
+</html>
